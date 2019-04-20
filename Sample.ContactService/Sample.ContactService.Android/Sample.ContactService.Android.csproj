@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Sample.ContactService.Droid</RootNamespace>
     <AssemblyName>Sample.ContactService.Android</AssemblyName>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sample.ContactService\Sample.ContactService.csproj">
-      <Project>{645CBC86-314A-4BAE-97ED-269C47EBC5B8}</Project>
+      <Project>{A0D230FC-801C-49CB-865C-158C4D36EBC8}</Project>
       <Name>Sample.ContactService</Name>
     </ProjectReference>
   </ItemGroup>

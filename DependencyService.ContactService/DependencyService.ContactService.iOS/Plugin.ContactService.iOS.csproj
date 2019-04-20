@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4C3998B3-91B2-444D-BBB8-F23C7772CD70}</ProjectGuid>
+    <ProjectGuid>{1DA06E31-58BA-4101-9D2E-C6599D8BED0F}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Sample.ContactService.iOS</RootNamespace>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DependencyService.ContactService.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Sample.ContactService.iOS</AssemblyName>
+    <AssemblyName>DependencyService.ContactService.iOS</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -88,29 +88,11 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <None Include="Entitlements.plist" />
-    <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\Default-568h%402x.png" />
-    <BundleResource Include="Resources\Default-Portrait.png" />
-    <BundleResource Include="Resources\Default-Portrait%402x.png" />
-    <BundleResource Include="Resources\Default.png" />
-    <BundleResource Include="Resources\Default%402x.png" />
-    <BundleResource Include="Resources\Icon-60%402x.png" />
-    <BundleResource Include="Resources\Icon-60%403x.png" />
-    <BundleResource Include="Resources\Icon-76.png" />
-    <BundleResource Include="Resources\Icon-76%402x.png" />
-    <BundleResource Include="Resources\Icon-Small-40.png" />
-    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
-    <BundleResource Include="Resources\Icon-Small-40%403x.png" />
-    <BundleResource Include="Resources\Icon-Small.png" />
-    <BundleResource Include="Resources\Icon-Small%402x.png" />
-    <BundleResource Include="Resources\Icon-Small%403x.png" />
-    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <Compile Include="ContactService.cs" />
+    <Compile Include="..\DependencyService.ContactService\CrossContactService.cs">
+      <Link>CrossContactService.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -119,16 +101,10 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Xamarin.Forms.Contacts">
-      <Version>1.0.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Sample.ContactService\Sample.ContactService.csproj">
-      <Project>{A0D230FC-801C-49CB-865C-158C4D36EBC8}</Project>
-      <Name>Sample.ContactService</Name>
+    <ProjectReference Include="..\DependencyService.ContactService.Abstractions\Plugin.ContactService.Abstractions.csproj">
+      <Project>{AA3E5F17-661B-4880-A36B-E2C5996F0378}</Project>
+      <Name>Plugin.ContactService.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
