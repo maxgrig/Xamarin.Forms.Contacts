@@ -22,8 +22,10 @@ namespace Plugin.ContactService
                 var keysToFetch = new[]
                 {
                     CNContactKey.GivenName,
+                    CNContactKey.MiddleName,
                     CNContactKey.FamilyName,
-                    CNContactKey.EmailAddresses
+                    CNContactKey.EmailAddresses,
+                    CNContactKey.PhoneNumbers
                 };
                 var contactList = ReadRawContactList(keysToFetch);
 
@@ -92,14 +94,16 @@ namespace Plugin.ContactService
 
         private static Contact GetContact(CNContact item)
         {
-            var numbers1 = GetNumbers(item.PhoneNumbers).ToList();
+            var numbers = GetNumbers(item.PhoneNumbers).ToList();
             var emails = GetNumbers(item.EmailAddresses).ToList();
 
             var contact = new Contact
             {
-                Name = $"{item.GivenName} {item.FamilyName}",
-                Numbers = numbers1,
-                Number = numbers1.LastOrDefault(),
+                Name = (string.IsNullOrWhiteSpace(item.GivenName) ? "" : item.GivenName)
+                     + (string.IsNullOrWhiteSpace(item.MiddleName) ? "" : $" {item.MiddleName}")
+                     + (string.IsNullOrWhiteSpace(item.FamilyName) ? "" : $" {item.FamilyName}"),
+                Numbers = numbers,
+                Number = numbers.LastOrDefault(),
                 Emails = emails,
                 Email = emails.LastOrDefault()
             };
@@ -124,7 +128,7 @@ namespace Plugin.ContactService
 
             foreach (var number in items)
             {
-                var value = number?.Value?.ToString();
+                var value = number?.Value?.StringValue ?? "";
                 yield return value;
             }
         }
