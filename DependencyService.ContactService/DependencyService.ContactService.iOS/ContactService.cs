@@ -25,7 +25,8 @@ namespace Plugin.ContactService
                     CNContactKey.MiddleName,
                     CNContactKey.FamilyName,
                     CNContactKey.EmailAddresses,
-                    CNContactKey.PhoneNumbers
+                    CNContactKey.PhoneNumbers,
+                    CNContactKey.PostalAddresses
                 };
                 var contactList = ReadRawContactList(keysToFetch);
 
@@ -33,7 +34,7 @@ namespace Plugin.ContactService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"\n\n\n{ex}\n\n\n");
+                Debug.WriteLine(ex);
                 return new List<Contact>();
             }
         }
@@ -80,7 +81,7 @@ namespace Plugin.ContactService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"\n\n\n{ex}\n\n\n");
+                Debug.WriteLine(ex);
             }
 
             return null;
@@ -96,6 +97,7 @@ namespace Plugin.ContactService
         {
             var numbers = GetNumbers(item.PhoneNumbers).ToList();
             var emails = GetNumbers(item.EmailAddresses).ToList();
+            var addresses = GetAddresses(item.PostalAddresses).ToList();
 
             var contact = new Contact
             {
@@ -105,10 +107,32 @@ namespace Plugin.ContactService
                 Numbers = numbers,
                 Number = numbers.LastOrDefault(),
                 Emails = emails,
-                Email = emails.LastOrDefault()
+                Email = emails.LastOrDefault(),
+                Addresses = addresses
             };
 
             return contact;
+        }
+
+        private static IEnumerable<ContactAddress> GetAddresses(CNLabeledValue<CNPostalAddress>[] items)
+        {
+            if (items == null) yield break;
+
+            foreach (var item in items)
+            {
+                var value = item?.Value;
+                if (value != null)
+                {
+                    yield return new ContactAddress
+                    {
+                        Street = value.Street,
+                        City = value.City,
+                        State = value.State,
+                        Zip = value.PostalCode,
+                        Country = value.Country
+                    };
+                }
+            }
         }
 
         private static IEnumerable<string> GetNumbers(CNLabeledValue<NSString>[] items)
@@ -118,7 +142,7 @@ namespace Plugin.ContactService
             foreach (var item in items)
             {
                 var value = item?.Value?.ToString();
-                yield return value;
+                if (value != null) yield return value ?? "";
             }
         }
 
@@ -129,7 +153,7 @@ namespace Plugin.ContactService
             foreach (var number in items)
             {
                 var value = number?.Value?.StringValue ?? "";
-                yield return value;
+                if (value != null) yield return value;
             }
         }
     }

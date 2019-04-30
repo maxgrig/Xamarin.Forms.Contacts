@@ -37,10 +37,10 @@ namespace Plugin.ContactService
         private static Contact CreateContact(ICursor cursor, Context ctx)
         {
             var contactId = GetString(cursor, ContactsContract.Contacts.InterfaceConsts.Id);
-//            var hasNumbers = GetString(cursor, ContactsContract.Contacts.InterfaceConsts.HasPhoneNumber) == "1";
 
             var numbers = GetNumbers(ctx, contactId).ToList();
             var emails = GetEmails(ctx, contactId).ToList();
+            var addresses = GetAddresses(ctx, contactId).ToList();
 
             var contact = new Contact
             {
@@ -50,10 +50,35 @@ namespace Plugin.ContactService
                 Emails = emails,
                 Email = emails.LastOrDefault(),
                 Numbers = numbers,
-                Number = numbers.LastOrDefault()
+                Number = numbers.LastOrDefault(),
+                Addresses = addresses
             };
 
             return contact;
+        }
+
+        private static IEnumerable<ContactAddress> GetAddresses(Context ctx, string contactId)
+        {
+            var cursor = ctx.ApplicationContext.ContentResolver.Query(
+                ContactsContract.CommonDataKinds.StructuredPostal.ContentUri,
+                null,
+                ContactsContract.CommonDataKinds.StructuredPostal.InterfaceConsts.ContactId + " = ?",
+                new[] { contactId },
+                null
+            );
+
+            while (cursor.MoveToNext())
+            {
+                yield return new ContactAddress
+                {
+                    Street = GetString(cursor, ContactsContract.CommonDataKinds.StructuredPostal.Street),
+                    City = GetString(cursor, ContactsContract.CommonDataKinds.StructuredPostal.City),
+                    State = GetString(cursor, ContactsContract.CommonDataKinds.StructuredPostal.Region),
+                    Zip = GetString(cursor, ContactsContract.CommonDataKinds.StructuredPostal.Postcode),
+                    Country = GetString(cursor, ContactsContract.CommonDataKinds.StructuredPostal.Country)
+                };
+            }
+            cursor.Close();
         }
 
         private static IEnumerable<string> GetNumbers(Context ctx, string contactId)
